@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -12,21 +11,21 @@ import (
 
 func DbInstall() error {
 	EnvDbFile := os.Getenv("TODO_DBFILE")
-	db, err := sql.Open("sqlite", EnvDbFile)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-
 	appPath, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)
 	}
 	fileDB := filepath.Join(appPath, EnvDbFile)
-	_, err = os.Stat(fileDB)
+	// _, err = os.Stat(fileDB)
+	// if err != nil {
+	// 	fmt.Println("создаем базу данных")
+	// }
+	log.Println("создаем базу данных")
+	db, err := sql.Open("sqlite", fileDB)
 	if err != nil {
-		fmt.Println("создаем базу данных")
+		log.Fatal(err)
 	}
+	defer db.Close()
 
 	_, err = db.Exec(`
 		CREATE TABLE scheduler (
